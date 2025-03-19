@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.XDMHPL_Back_end.DTO.Users;
 
-public interface UserRepository extends JpaRepository<Users, Long> {
-    Optional<Users> findById(Long id);
+public interface UserRepository extends JpaRepository<Users, Integer> {
+    Optional<Users> findById(Integer id);
 }
