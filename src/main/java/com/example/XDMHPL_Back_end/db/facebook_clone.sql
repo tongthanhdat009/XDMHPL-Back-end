@@ -1,446 +1,198 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 19, 2025 lúc 04:17 AM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.0.30
+DROP DATABASE IF EXISTS facebook_clone;
+CREATE DATABASE facebook_clone;
+USE `facebook_clone`;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+CREATE TABLE `ChatBox`(
+	`ChatBoxID` int NOT NULL,
+	`ImageURL` nvarchar(200) NULL,
+	`ChatBoxName` nvarchar(50) NULL,
+	`Mute` Tinyint NULL,
+	`Block` Tinyint NULL,
+	PRIMARY KEY (`ChatBoxID` ASC)
+);
 
+CREATE TABLE `ChatBoxDetail`(
+	`UserID` int NOT NULL,
+	`ChatBoxID` int NOT NULL,
+	PRIMARY KEY (`UserID` ASC, `ChatBoxID` ASC)
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+CREATE TABLE `Comments`(
+	`CommentID` int NOT NULL,
+	`CreationDate` date NULL,
+	`UserID` int NULL,
+	`PostID` int NULL,
+	PRIMARY KEY (`CommentID` ASC)
+);
 
---
--- Cơ sở dữ liệu: `facebook_clone`
---
+CREATE TABLE `Followers`(
+	`FollowerID` int NOT NULL,
+	`UserID` int NULL,
+	PRIMARY KEY (`FollowerID` ASC)
+);
 
--- --------------------------------------------------------
-DROP DATABASE IF EXISTS facebook_clone;  
-CREATE DATABASE facebook_clone;          
-USE facebook_clone;                      
+CREATE TABLE `Following`(
+	`FollowingID` int NOT NULL,
+	`UserID` int NULL,
+	PRIMARY KEY (`FollowingID` ASC)
+);
 
---
--- Cấu trúc bảng cho bảng `chatbox`
---
+CREATE TABLE `Friends`(
+	`FriendID` int NOT NULL,
+	`UserID` int NULL,
+	PRIMARY KEY (`FriendID` ASC)
+);
 
+CREATE TABLE `Likes`(
+	`LikeID` int NOT NULL,
+	`UserID` int NULL,
+	`PostID` int NULL,
+	PRIMARY KEY (`LikeID` ASC)
+);
 
+CREATE TABLE `Message`(
+	`MessageID` int NOT NULL,
+	`Text` nvarchar(500) NULL,
+	`Time` datetime NULL,
+	`Seen` Tinyint NULL,
+	`Display` Tinyint NULL,
+	`ChatBoxID` int NULL,
+	PRIMARY KEY (`MessageID` ASC)
+);
 
-CREATE TABLE `chatbox` (
-  `ChatBoxID` int(11) NOT NULL,
-  `ImageURL` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `ChatBoxName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Mute` tinyint(4) DEFAULT NULL,
-  `Block` tinyint(4) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `MessageMedia`(
+	`MessageMediaID` int NOT NULL,
+	`MediaType` nvarchar(50) NULL,
+	`MediaURL` nvarchar(200) NULL,
+	`MessageID` int NULL,
+	PRIMARY KEY (`MessageMediaID` ASC)
+);
 
--- --------------------------------------------------------
+CREATE TABLE `Notification`(
+	`NotificationID` int NOT NULL,
+	`UserID` int NULL,
+	`SenderID` int NULL,
+	`Type` ENUM('LIKE', 'COMMENT', 'MESSAGE', 'FRIEND_REQUEST', 'FOLLOW') NULL,
+	`PostID` int NULL,
+	`CommentID` int NULL,
+	`MessageID` int NULL,
+	`Content` TEXT NULL,
+	`CreatedAt` datetime(3) NULL,
+	`IsReadFlag` Tinyint NULL,
+	PRIMARY KEY (`NotificationID` ASC)
+);
 
---
--- Cấu trúc bảng cho bảng `chatboxdetail`
---
+CREATE TABLE `Post`(
+	`PostID` int NOT NULL,
+	`CreationDate` date NULL,
+	`Type` nvarchar(50) NULL,
+	`UserID` int NULL,
+	`SharedByUserID` int NULL,
+	`Content` nvarchar(200) NULL,
+	`PriorityScore` int DEFAULT 0,
+	PRIMARY KEY (`PostID` ASC)
+);
 
-CREATE TABLE `chatboxdetail` (
-  `UserID` int(11) NOT NULL,
-  `ChatBoxID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `PostMedia`(
+	`PostMediaID` int NOT NULL,
+	`Type` nvarchar(50) NULL,
+	`MediaURL` nvarchar(200) NULL,
+	`PostID` int NULL,
+	PRIMARY KEY (`PostMediaID` ASC)
+);
 
--- --------------------------------------------------------
+CREATE TABLE `Users`(
+	`UserID` int NOT NULL,
+	`FullName` nvarchar(50) NULL,
+	`Username` nvarchar(50) NULL,
+	`Password` nvarchar(50) NULL,
+	`Email` nvarchar(50) NULL,
+	`AvatarURL` nvarchar(200) NULL,
+	PRIMARY KEY (`UserID` ASC)
+);
 
---
--- Cấu trúc bảng cho bảng `comments`
---
+ALTER TABLE `ChatBoxDetail` ADD CONSTRAINT `FK_ChatBoxDetail_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `ChatBox` (`ChatBoxID`) ON DELETE CASCADE;
+ALTER TABLE `ChatBoxDetail` ADD CONSTRAINT `FK_ChatBoxDetail_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Comments` ADD CONSTRAINT `FK_Comments_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE CASCADE;
+ALTER TABLE `Comments` ADD CONSTRAINT `FK_Comments_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE SET NULL;
+ALTER TABLE `Followers` ADD CONSTRAINT `FK_Followers_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Following` ADD CONSTRAINT `FK_Following_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Friends` ADD CONSTRAINT `FK_Friends_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Likes` ADD CONSTRAINT `FK_Likes_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE CASCADE;
+ALTER TABLE `Likes` ADD CONSTRAINT `FK_Likes_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Message` ADD CONSTRAINT `FK_Message_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `ChatBox` (`ChatBoxID`) ON DELETE CASCADE;
+ALTER TABLE `MessageMedia` ADD CONSTRAINT `FK_MessageMedia_Message` FOREIGN KEY (`MessageID`) REFERENCES `Message` (`MessageID`) ON DELETE CASCADE;
+ALTER TABLE `Notification` ADD CONSTRAINT `FK_Notification_Comments` FOREIGN KEY (`CommentID`) REFERENCES `Comments` (`CommentID`) ON DELETE SET NULL;
+ALTER TABLE `Notification` ADD CONSTRAINT `FK_Notification_Message` FOREIGN KEY (`MessageID`) REFERENCES `Message` (`MessageID`) ON DELETE SET NULL;
+ALTER TABLE `Notification` ADD CONSTRAINT `FK_Notification_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE SET NULL;
+ALTER TABLE `Notification` ADD CONSTRAINT `FK_Notification_Sender` FOREIGN KEY (`SenderID`) REFERENCES `Users` (`UserID`) ON DELETE SET NULL;
+ALTER TABLE `Notification` ADD CONSTRAINT `FK_Notification_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `Post` ADD CONSTRAINT `FK_Post_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
+ALTER TABLE `PostMedia` ADD CONSTRAINT `FK_PostMedia_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE CASCADE;
 
-CREATE TABLE `comments` (
-  `CommentID` int(11) NOT NULL,
-  `CreationDate` date DEFAULT NULL,
-  `UserID` int(11) DEFAULT NULL,
-  `PostID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `followers`
---
-
-CREATE TABLE `followers` (
-  `FollowerID` int(11) NOT NULL,
-  `UserID` int(11) DEFAULT NULL,
-  `FollowedUserID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `following`
---
-
-CREATE TABLE `following` (
-  `FollowingID` int(11) NOT NULL,
-  `UserID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `friends`
---
-
-CREATE TABLE `friends` (
-  `FriendID` int(11) NOT NULL,
-  `UserID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `like`
---
-
-CREATE TABLE `like` (
-  `LikeID` int(11) NOT NULL,
-  `UserID` int(11) DEFAULT NULL,
-  `PostID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Bẫy `like`
---
 DELIMITER $$
-CREATE TRIGGER `update_priority_after_like` AFTER INSERT ON `like` FOR EACH ROW BEGIN
-    DECLARE follower_bonus INT DEFAULT 0;
-    IF EXISTS (SELECT 1 FROM `Followers` WHERE `UserID` = NEW.`UserID` AND `FollowedUserID` = (SELECT `UserID` FROM `Post` WHERE `PostID` = NEW.`PostID`)) THEN
-        SET follower_bonus = 2;
+-- Trigger cập nhật PriorityScore khi có lượt thích
+CREATE TRIGGER trg_update_priority_likes
+AFTER INSERT ON Likes
+FOR EACH ROW
+BEGIN
+    UPDATE Post SET PriorityScore = PriorityScore + 1 WHERE PostID = NEW.PostID;
+END $$
+
+-- Trigger giảm PriorityScore khi lượt thích bị xóa
+CREATE TRIGGER trg_decrease_priority_likes
+AFTER DELETE ON Likes
+FOR EACH ROW
+BEGIN
+    UPDATE Post SET PriorityScore = PriorityScore - 1 WHERE PostID = OLD.PostID;
+END $$
+
+-- Trigger cập nhật PriorityScore khi có bình luận
+CREATE TRIGGER trg_update_priority_comments
+AFTER INSERT ON Comments
+FOR EACH ROW
+BEGIN
+    UPDATE Post SET PriorityScore = PriorityScore + 2 WHERE PostID = NEW.PostID;
+END $$
+
+-- Trigger giảm PriorityScore khi bình luận bị xóa
+CREATE TRIGGER trg_decrease_priority_comments
+AFTER DELETE ON Comments
+FOR EACH ROW
+BEGIN
+    UPDATE Post SET PriorityScore = PriorityScore - 2 WHERE PostID = OLD.PostID;
+END $$
+
+-- Trigger cập nhật PriorityScore khi có bài viết chia sẻ
+CREATE TRIGGER trg_update_priority_shares
+AFTER INSERT ON Post
+FOR EACH ROW
+BEGIN
+    IF NEW.SharedByUserID IS NOT NULL THEN
+        UPDATE Post SET PriorityScore = PriorityScore + 3 WHERE PostID = NEW.SharedByUserID;
     END IF;
-    
-    UPDATE `Post`
-    SET `PriorityScore` = ((SELECT COUNT(*) FROM `Like` WHERE `Like`.`PostID` = NEW.`PostID`) * 2 + 
-                            (SELECT COUNT(*) FROM `Comments` WHERE `Comments`.`PostID` = NEW.`PostID`) * 3 + 
-                            follower_bonus) 
-                            / POW(TIMESTAMPDIFF(HOUR, `CreationDate`, NOW()), 1.5)
-    WHERE `PostID` = NEW.`PostID`;
-END
-$$
+END $$
+
+-- Trigger giảm PriorityScore khi bài viết chia sẻ bị xóa
+CREATE TRIGGER trg_decrease_priority_shares
+AFTER DELETE ON Post
+FOR EACH ROW
+BEGIN
+    IF OLD.SharedByUserID IS NOT NULL THEN
+        UPDATE Post SET PriorityScore = PriorityScore - 3 WHERE PostID = OLD.SharedByUserID;
+    END IF;
+END $$
+  
+-- Trigger cập nhật PriorityScore theo thời gian
+CREATE TRIGGER trg_decay_priority
+BEFORE UPDATE ON Post
+FOR EACH ROW
+BEGIN
+    DECLARE hours_since_creation FLOAT;
+    SET hours_since_creation = TIMESTAMPDIFF(HOUR, NEW.CreationDate, NOW());
+    IF hours_since_creation > 0 THEN
+        SET NEW.PriorityScore = NEW.PriorityScore / POWER(hours_since_creation, 1.25);
+    END IF;
+END $$
+
 DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `message`
---
-
-CREATE TABLE `message` (
-  `MessageID` int(11) NOT NULL,
-  `Text` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Time` date DEFAULT NULL,
-  `Seen` tinyint(4) DEFAULT NULL,
-  `Display` tinyint(4) DEFAULT NULL,
-  `ChatBoxID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `messagemedia`
---
-
-CREATE TABLE `messagemedia` (
-  `MessageMediaID` int(11) NOT NULL,
-  `MediaType` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `MediaURL` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `MessageID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `post`
---
-
-CREATE TABLE `post` (
-  `PostID` int(11) NOT NULL,
-  `CreationDate` date DEFAULT NULL,
-  `Type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `UserID` int(11) DEFAULT NULL,
-  `SharedByUserID` int(11) DEFAULT NULL,
-  `Content` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `PriorityScore` float DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `postmedia`
---
-
-CREATE TABLE `postmedia` (
-  `PostMediaID` int(11) NOT NULL,
-  `Type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `MediaURL` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `PostID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `users`
---
-
-CREATE TABLE `users` (
-  `UserID` int(11) NOT NULL,
-  `Password` varchar(255) DEFAULT NULL,
-  `Email` varchar(255) NOT NULL,
-  `Avatar` varchar(255) NOT NULL,
-  `FullName` varchar(255) NOT NULL,
-  `UserName` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `users`
---
-
-INSERT INTO `users` (`UserID`, `Password`, `Email`, `Avatar`, `FullName`, `UserName`) VALUES
-(1, 'password123', 'nguyenvana@example.com', 'avatar1.jpg', 'a', 'a'),
-(2, 'password123', 'tranthib@example.com', 'avatar2.jpg', 'b', 'g'),
-(3, 'password123', 'levanc@example.com', 'avatar3.jpg', 'c', 'x'),
-(4, 'password123', 'phamthid@example.com', 'avatar4.jpg', 'd', 'd'),
-(5, 'password123', 'hoangvane@example.com', 'avatar5.jpg', 'e', 'b'),
-(6, '123456', 'a@gmail.com', 'abcs', 'dat', 'dat1');
-
---
--- Chỉ mục cho các bảng đã đổ
---
-
---
--- Chỉ mục cho bảng `chatbox`
---
-ALTER TABLE `chatbox`
-  ADD PRIMARY KEY (`ChatBoxID`);
-
---
--- Chỉ mục cho bảng `chatboxdetail`
---
-ALTER TABLE `chatboxdetail`
-  ADD PRIMARY KEY (`UserID`,`ChatBoxID`),
-  ADD KEY `FK_ChatBoxDetail_ChatBox` (`ChatBoxID`);
-
---
--- Chỉ mục cho bảng `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`CommentID`),
-  ADD KEY `FK_Comments_Post` (`PostID`),
-  ADD KEY `FK_Comments_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `followers`
---
-ALTER TABLE `followers`
-  ADD PRIMARY KEY (`FollowerID`),
-  ADD KEY `FK_Followers_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `following`
---
-ALTER TABLE `following`
-  ADD PRIMARY KEY (`FollowingID`),
-  ADD KEY `FK_Following_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `friends`
---
-ALTER TABLE `friends`
-  ADD PRIMARY KEY (`FriendID`),
-  ADD KEY `FK_Friends_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `like`
---
-ALTER TABLE `like`
-  ADD PRIMARY KEY (`LikeID`),
-  ADD KEY `FK_Like_Post` (`PostID`),
-  ADD KEY `FK_Like_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`MessageID`),
-  ADD KEY `FK_Message_ChatBox` (`ChatBoxID`);
-
---
--- Chỉ mục cho bảng `messagemedia`
---
-ALTER TABLE `messagemedia`
-  ADD PRIMARY KEY (`MessageMediaID`),
-  ADD KEY `FK_MessageMedia_Message` (`MessageID`);
-
---
--- Chỉ mục cho bảng `post`
---
-ALTER TABLE `post`
-  ADD PRIMARY KEY (`PostID`),
-  ADD KEY `FK_Post_Users` (`UserID`);
-
---
--- Chỉ mục cho bảng `postmedia`
---
-ALTER TABLE `postmedia`
-  ADD PRIMARY KEY (`PostMediaID`),
-  ADD KEY `FK_PostMedia_Post` (`PostID`);
-
---
--- Chỉ mục cho bảng `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserID`),
-  ADD UNIQUE KEY `Email` (`Email`);
-
---
--- AUTO_INCREMENT cho các bảng đã đổ
---
-
---
--- AUTO_INCREMENT cho bảng `chatbox`
---
-ALTER TABLE `chatbox`
-  MODIFY `ChatBoxID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `comments`
---
-ALTER TABLE `comments`
-  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `followers`
---
-ALTER TABLE `followers`
-  MODIFY `FollowerID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `following`
---
-ALTER TABLE `following`
-  MODIFY `FollowingID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `friends`
---
-ALTER TABLE `friends`
-  MODIFY `FriendID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `like`
---
-ALTER TABLE `like`
-  MODIFY `LikeID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `message`
---
-ALTER TABLE `message`
-  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `messagemedia`
---
-ALTER TABLE `messagemedia`
-  MODIFY `MessageMediaID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `post`
---
-ALTER TABLE `post`
-  MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `postmedia`
---
-ALTER TABLE `postmedia`
-  MODIFY `PostMediaID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `users`
---
-ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- Các ràng buộc cho các bảng đã đổ
---
-
---
--- Các ràng buộc cho bảng `chatboxdetail`
---
-ALTER TABLE `chatboxdetail`
-  ADD CONSTRAINT `FK_ChatBoxDetail_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `chatbox` (`ChatBoxID`),
-  ADD CONSTRAINT `FK_ChatBoxDetail_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `comments`
---
-ALTER TABLE `comments`
-  ADD CONSTRAINT `FK_Comments_Post` FOREIGN KEY (`PostID`) REFERENCES `post` (`PostID`),
-  ADD CONSTRAINT `FK_Comments_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `followers`
---
-ALTER TABLE `followers`
-  ADD CONSTRAINT `FK_Followers_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `following`
---
-ALTER TABLE `following`
-  ADD CONSTRAINT `FK_Following_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `friends`
---
-ALTER TABLE `friends`
-  ADD CONSTRAINT `FK_Friends_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `like`
---
-ALTER TABLE `like`
-  ADD CONSTRAINT `FK_Like_Post` FOREIGN KEY (`PostID`) REFERENCES `post` (`PostID`),
-  ADD CONSTRAINT `FK_Like_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `message`
---
-ALTER TABLE `message`
-  ADD CONSTRAINT `FK_Message_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `chatbox` (`ChatBoxID`);
-
---
--- Các ràng buộc cho bảng `messagemedia`
---
-ALTER TABLE `messagemedia`
-  ADD CONSTRAINT `FK_MessageMedia_Message` FOREIGN KEY (`MessageID`) REFERENCES `message` (`MessageID`);
-
---
--- Các ràng buộc cho bảng `post`
---
-ALTER TABLE `post`
-  ADD CONSTRAINT `FK_Post_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`);
-
---
--- Các ràng buộc cho bảng `postmedia`
---
-ALTER TABLE `postmedia`
-  ADD CONSTRAINT `FK_PostMedia_Post` FOREIGN KEY (`PostID`) REFERENCES `post` (`PostID`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
