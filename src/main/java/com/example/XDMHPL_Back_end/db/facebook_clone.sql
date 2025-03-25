@@ -110,6 +110,7 @@ CREATE TABLE `Users`(
     `AvatarURL` VARCHAR(200) NULL,
     `CoverPhotoUrl` VARCHAR(200) NULL,
     `SessionID` VARCHAR(255) NULL,
+    `Role` VARCHAR(20) NULL,
     PRIMARY KEY (`UserID`)
 );
 CREATE TABLE `Sessions` (
