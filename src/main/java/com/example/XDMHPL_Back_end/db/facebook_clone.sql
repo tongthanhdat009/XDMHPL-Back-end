@@ -3,112 +3,112 @@ CREATE DATABASE facebook_clone;
 USE `facebook_clone`;
 
 CREATE TABLE `ChatBox`(
-	`ChatBoxID` int NOT NULL,
-	`ImageURL` nvarchar(200) NULL,
-	`ChatBoxName` nvarchar(50) NULL,
-	`Mute` Tinyint NULL,
-	`Block` Tinyint NULL,
-	PRIMARY KEY (`ChatBoxID` ASC)
+    `ChatBoxID` int NOT NULL AUTO_INCREMENT,
+    `ImageURL` nvarchar(200) NULL,
+    `ChatBoxName` nvarchar(50) NULL,
+    `Mute` Tinyint NULL,
+    `Block` Tinyint NULL,
+    PRIMARY KEY (`ChatBoxID`)
 );
 
 CREATE TABLE `ChatBoxDetail`(
-	`UserID` int NOT NULL,
-	`ChatBoxID` int NOT NULL,
-	PRIMARY KEY (`UserID` ASC, `ChatBoxID` ASC)
+    `UserID` int NOT NULL,
+    `ChatBoxID` int NOT NULL,
+    PRIMARY KEY (`UserID`, `ChatBoxID`)
 );
 
 CREATE TABLE `Comments`(
-	`CommentID` int NOT NULL,
-	`CreationDate` date NULL,
-	`UserID` int NULL,
-	`PostID` int NULL,
-	PRIMARY KEY (`CommentID` ASC)
+    `CommentID` int NOT NULL AUTO_INCREMENT,
+    `CreationDate` date NULL,
+    `UserID` int NULL,
+    `PostID` int NULL,
+    PRIMARY KEY (`CommentID`)
 );
 
 CREATE TABLE `Followers`(
-	`FollowerID` int NOT NULL,
-	`UserID` int NULL,
-	PRIMARY KEY (`FollowerID` ASC)
+    `FollowerID` int NOT NULL AUTO_INCREMENT,
+    `UserID` int NULL,
+    PRIMARY KEY (`FollowerID`)
 );
 
 CREATE TABLE `Following`(
-	`FollowingID` int NOT NULL,
-	`UserID` int NULL,
-	PRIMARY KEY (`FollowingID` ASC)
+    `FollowingID` int NOT NULL AUTO_INCREMENT,
+    `UserID` int NULL,
+    PRIMARY KEY (`FollowingID`)
 );
 
 CREATE TABLE `Friends`(
-	`FriendID` int NOT NULL,
-	`UserID` int NULL,
-	PRIMARY KEY (`FriendID` ASC)
+    `FriendID` int NOT NULL AUTO_INCREMENT,
+    `UserID` int NULL,
+    PRIMARY KEY (`FriendID`)
 );
 
 CREATE TABLE `Likes`(
-	`LikeID` int NOT NULL,
-	`UserID` int NULL,
-	`PostID` int NULL,
-	PRIMARY KEY (`LikeID` ASC)
+    `LikeID` int NOT NULL AUTO_INCREMENT,
+    `UserID` int NULL,
+    `PostID` int NULL,
+    PRIMARY KEY (`LikeID`)
 );
 
 CREATE TABLE `Message`(
-	`MessageID` int NOT NULL,
-	`Text` nvarchar(500) NULL,
-	`Time` datetime NULL,
-	`Seen` Tinyint NULL,
-	`Display` Tinyint NULL,
-	`ChatBoxID` int NULL,
-	PRIMARY KEY (`MessageID` ASC)
+    `MessageID` int NOT NULL AUTO_INCREMENT,
+    `Text` nvarchar(500) NULL,
+    `Time` datetime NULL,
+    `Seen` Tinyint NULL,
+    `Display` Tinyint NULL,
+    `ChatBoxID` int NULL,
+    PRIMARY KEY (`MessageID`)
 );
 
 CREATE TABLE `MessageMedia`(
-	`MessageMediaID` int NOT NULL,
-	`MediaType` nvarchar(50) NULL,
-	`MediaURL` nvarchar(200) NULL,
-	`MessageID` int NULL,
-	PRIMARY KEY (`MessageMediaID` ASC)
+    `MessageMediaID` int NOT NULL AUTO_INCREMENT,
+    `MediaType` nvarchar(50) NULL,
+    `MediaURL` nvarchar(200) NULL,
+    `MessageID` int NULL,
+    PRIMARY KEY (`MessageMediaID`)
 );
 
 CREATE TABLE `Notification`(
-	`NotificationID` int NOT NULL,
-	`UserID` int NULL,
-	`SenderID` int NULL,
-	`Type` ENUM('LIKE', 'COMMENT', 'MESSAGE', 'FRIEND_REQUEST', 'FOLLOW') NULL,
-	`PostID` int NULL,
-	`CommentID` int NULL,
-	`MessageID` int NULL,
-	`Content` TEXT NULL,
-	`CreatedAt` datetime(3) NULL,
-	`IsReadFlag` Tinyint NULL,
-	PRIMARY KEY (`NotificationID` ASC)
+    `NotificationID` int NOT NULL AUTO_INCREMENT,
+    `UserID` int NULL,
+    `SenderID` int NULL,
+    `Type` ENUM('LIKE', 'COMMENT', 'MESSAGE', 'FRIEND_REQUEST', 'FOLLOW') NULL,
+    `PostID` int NULL,
+    `CommentID` int NULL,
+    `MessageID` int NULL,
+    `Content` TEXT NULL,
+    `CreatedAt` datetime(3) NULL,
+    `IsReadFlag` Tinyint NULL,
+    PRIMARY KEY (`NotificationID`)
 );
 
 CREATE TABLE `Post`(
-	`PostID` int NOT NULL,
-	`CreationDate` date NULL,
-	`Type` nvarchar(50) NULL,
-	`UserID` int NULL,
-	`SharedByUserID` int NULL,
-	`Content` nvarchar(200) NULL,
-	`PriorityScore` int DEFAULT 0,
-	PRIMARY KEY (`PostID` ASC)
+    `PostID` int NOT NULL AUTO_INCREMENT,
+    `CreationDate` date NULL,
+    `Type` nvarchar(50) NULL,
+    `UserID` int NULL,
+    `SharedByUserID` int NULL,
+    `Content` nvarchar(200) NULL,
+    `PriorityScore` int DEFAULT 0,
+    PRIMARY KEY (`PostID`)
 );
 
 CREATE TABLE `PostMedia`(
-	`PostMediaID` int NOT NULL,
-	`Type` nvarchar(50) NULL,
-	`MediaURL` nvarchar(200) NULL,
-	`PostID` int NULL,
-	PRIMARY KEY (`PostMediaID` ASC)
+    `PostMediaID` int NOT NULL AUTO_INCREMENT,
+    `Type` nvarchar(50) NULL,
+    `MediaURL` nvarchar(200) NULL,
+    `PostID` int NULL,
+    PRIMARY KEY (`PostMediaID`)
 );
 
 CREATE TABLE `Users`(
-	`UserID` int NOT NULL,
-	`FullName` nvarchar(50) NULL,
-	`Username` nvarchar(50) NULL,
-	`Password` nvarchar(50) NULL,
-	`Email` nvarchar(50) NULL,
-	`AvatarURL` nvarchar(200) NULL,
-	PRIMARY KEY (`UserID` ASC)
+    `UserID` int NOT NULL AUTO_INCREMENT,
+    `FullName` nvarchar(50) NULL,
+    `Username` nvarchar(50) NULL,
+    `Password` nvarchar(50) NULL,
+    `Email` nvarchar(50) NULL,
+    `AvatarURL` nvarchar(200) NULL,
+    PRIMARY KEY (`UserID`)
 );
 
 ALTER TABLE `ChatBoxDetail` ADD CONSTRAINT `FK_ChatBoxDetail_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `ChatBox` (`ChatBoxID`) ON DELETE CASCADE;
@@ -131,6 +131,7 @@ ALTER TABLE `Post` ADD CONSTRAINT `FK_Post_Users` FOREIGN KEY (`UserID`) REFEREN
 ALTER TABLE `PostMedia` ADD CONSTRAINT `FK_PostMedia_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE CASCADE;
 
 DELIMITER $$
+
 -- Trigger cập nhật PriorityScore khi có lượt thích
 CREATE TRIGGER trg_update_priority_likes
 AFTER INSERT ON Likes
@@ -182,7 +183,6 @@ BEGIN
         UPDATE Post SET PriorityScore = PriorityScore - 3 WHERE PostID = OLD.SharedByUserID;
     END IF;
 END $$
-  
 -- Trigger cập nhật PriorityScore theo thời gian
 CREATE TRIGGER trg_decay_priority
 BEFORE UPDATE ON Post
@@ -194,5 +194,4 @@ BEGIN
         SET NEW.PriorityScore = NEW.PriorityScore / POWER(hours_since_creation, 1.25);
     END IF;
 END $$
-
 DELIMITER ;

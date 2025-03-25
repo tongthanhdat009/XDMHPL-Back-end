@@ -21,7 +21,7 @@ public class Users {
 	@Column(name = "Password", nullable = false)
 	private String password;
 
-	@Column(name = "Avatar", nullable = false)
+	@Column(name = "AvatarURL", nullable = false)
 	private String avatar;
 
 	// Constructor rỗng bắt buộc cho JPA
