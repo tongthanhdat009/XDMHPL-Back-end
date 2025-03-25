@@ -25,8 +25,15 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public Users addUser(@RequestParam String fullName, @RequestParam String userName, @RequestParam String password, @RequestParam String email, @RequestParam String avatar) {
-		return usersService.createUser(fullName, userName, password, email, avatar);
+	public Users addUser(@RequestParam String fullName,
+			@RequestParam String userName,
+			@RequestParam String password,
+			@RequestParam String email,
+			@RequestParam String avatar,
+			@RequestParam String coverPhotoURL,
+			@RequestParam String sessionID,
+			@RequestParam String role) {
+		return usersService.createUser(fullName, userName, password, email, avatar, coverPhotoURL, sessionID ,role);
 	}
 	
 	@GetMapping("/{id}")

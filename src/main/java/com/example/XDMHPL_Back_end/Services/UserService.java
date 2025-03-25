@@ -18,8 +18,8 @@ public class UserService {
         return usersRepository.findAll();
     }
 
-    public Users createUser(String fullName, String userName, String password, String email, String avatar) {
-    	Users user = new Users(fullName, userName, password, email, avatar);
+    public Users createUser(String fullName, String userName, String password, String email, String avatar, String coverPhotoURL, String sessionID, String role) {
+    	Users user = new Users(fullName, userName, password, email, avatar, coverPhotoURL, sessionID, role);
         return usersRepository.save(user);
     }
     
