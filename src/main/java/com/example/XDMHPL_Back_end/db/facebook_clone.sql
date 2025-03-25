@@ -103,13 +103,13 @@ CREATE TABLE `PostMedia`(
 
 CREATE TABLE `Users`(
     `UserID` int NOT NULL AUTO_INCREMENT,
-    `FullName` nvarchar(50) NULL,
-    `Username` nvarchar(50) NULL,
-    `Password` nvarchar(50) NULL,
-    `Email` nvarchar(50) NULL,
-    `AvatarURL` nvarchar(200) NULL,
-    `CoverPhotoUrl` navarchar(200) NULL,
-    `SessionID` VARCHAR(255) NULL
+    `FullName` VARCHAR(50) NULL,
+    `Username` VARCHAR(50) NULL,
+    `Password` VARCHAR(50) NULL,
+    `Email` VARCHAR(50) NULL,
+    `AvatarURL` VARCHAR(200) NULL,
+    `CoverPhotoUrl` VARCHAR(200) NULL,
+    `SessionID` VARCHAR(255) NULL,
     PRIMARY KEY (`UserID`)
 );
 CREATE TABLE `Sessions` (
@@ -117,7 +117,7 @@ CREATE TABLE `Sessions` (
     `UserID` INT NOT NULL,
     `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `ExpiresAt` DATETIME NULL,
-    `DeviceInfo` NVARCHAR(255) NULL,
+    `DeviceInfo` VARCHAR(255) NULL,
     PRIMARY KEY (`SessionID`),
     FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`) ON DELETE CASCADE
 );
