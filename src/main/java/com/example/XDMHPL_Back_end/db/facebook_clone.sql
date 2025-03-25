@@ -108,9 +108,19 @@ CREATE TABLE `Users`(
     `Password` nvarchar(50) NULL,
     `Email` nvarchar(50) NULL,
     `AvatarURL` nvarchar(200) NULL,
+    `CoverPhotoUrl` navarchar(200) NULL,
+    `SessionID` VARCHAR(255) NULL
     PRIMARY KEY (`UserID`)
 );
-
+CREATE TABLE `Sessions` (
+    `SessionID` VARCHAR(255) NOT NULL,
+    `UserID` INT NOT NULL,
+    `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `ExpiresAt` DATETIME NULL,
+    `DeviceInfo` NVARCHAR(255) NULL,
+    PRIMARY KEY (`SessionID`),
+    FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`) ON DELETE CASCADE
+);
 ALTER TABLE `ChatBoxDetail` ADD CONSTRAINT `FK_ChatBoxDetail_ChatBox` FOREIGN KEY (`ChatBoxID`) REFERENCES `ChatBox` (`ChatBoxID`) ON DELETE CASCADE;
 ALTER TABLE `ChatBoxDetail` ADD CONSTRAINT `FK_ChatBoxDetail_Users` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE;
 ALTER TABLE `Comments` ADD CONSTRAINT `FK_Comments_Post` FOREIGN KEY (`PostID`) REFERENCES `Post` (`PostID`) ON DELETE CASCADE;
