@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 08, 2025 lúc 04:16 AM
+-- Thời gian đã tạo: Th4 08, 2025 lúc 04:46 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -16,13 +16,13 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-DROP DATABASE IF EXISTS facebook_clone;
-CREATE DATABASE facebook_clone;
-USE `facebook_clone`;
+
 --
 -- Cơ sở dữ liệu: `facebook_clone`
 --
-
+DROP DATABASE IF EXISTS facebook_clone;
+CREATE DATABASE facebook_clone;
+USE `facebook_clone`;
 -- --------------------------------------------------------
 
 --
@@ -164,7 +164,6 @@ CREATE TABLE `post` (
   `CreationDate` date DEFAULT NULL,
   `Type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `UserID` int(11) DEFAULT NULL,
-  `SharedByUserID` int(11) DEFAULT NULL,
   `Content` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `PriorityScore` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -227,6 +226,10 @@ CREATE TABLE `users` (
   `SessionID` varchar(255) DEFAULT NULL,
   `Role` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
 
 --
 -- Chỉ mục cho bảng `chatbox`
@@ -307,9 +310,7 @@ ALTER TABLE `notification`
 -- Chỉ mục cho bảng `post`
 --
 ALTER TABLE `post`
-  ADD PRIMARY KEY (`PostID`),
-  ADD KEY `FK_Post_Users` (`UserID`),
-  ADD KEY `FK_Post_User` (`SharedByUserID`);
+  ADD PRIMARY KEY (`PostID`);
 
 --
 -- Chỉ mục cho bảng `postmedia`
@@ -401,7 +402,7 @@ ALTER TABLE `notification`
 -- AUTO_INCREMENT cho bảng `post`
 --
 ALTER TABLE `post`
-  MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `postmedia`
@@ -419,7 +420,7 @@ ALTER TABLE `postshare`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -490,7 +491,6 @@ ALTER TABLE `notification`
 -- Các ràng buộc cho bảng `post`
 --
 ALTER TABLE `post`
-  ADD CONSTRAINT `FK_Post_User` FOREIGN KEY (`SharedByUserID`) REFERENCES `users` (`UserID`),
   ADD CONSTRAINT `FK_Post_Users` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`) ON DELETE CASCADE;
 
 --
