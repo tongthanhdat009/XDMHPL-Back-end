@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 08, 2025 lúc 04:46 AM
+-- Thời gian đã tạo: Th4 08, 2025 lúc 06:21 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -191,7 +191,7 @@ CREATE TABLE `postshare` (
   `ShareID` int(11) NOT NULL,
   `OriginalPostID` int(11) DEFAULT NULL,
   `SharedByUserID` int(11) DEFAULT NULL,
-  `ShareDate` datetime DEFAULT NULL,
+  `ShareDate` date DEFAULT NULL,
   `Content` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -310,7 +310,8 @@ ALTER TABLE `notification`
 -- Chỉ mục cho bảng `post`
 --
 ALTER TABLE `post`
-  ADD PRIMARY KEY (`PostID`);
+  ADD PRIMARY KEY (`PostID`),
+  ADD KEY `FK_Post_Users` (`UserID`);
 
 --
 -- Chỉ mục cho bảng `postmedia`
