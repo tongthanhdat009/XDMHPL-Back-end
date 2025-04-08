@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 05, 2025 lúc 10:40 AM
+-- Thời gian đã tạo: Th4 08, 2025 lúc 04:16 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -16,13 +16,13 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Cơ sở dữ liệu: `facebook_clone`
---
 DROP DATABASE IF EXISTS facebook_clone;
 CREATE DATABASE facebook_clone;
 USE `facebook_clone`;
+--
+-- Cơ sở dữ liệu: `facebook_clone`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -169,14 +169,6 @@ CREATE TABLE `post` (
   `PriorityScore` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `post`
---
-
-INSERT INTO `post` (`PostID`, `CreationDate`, `Type`, `UserID`, `SharedByUserID`, `Content`, `PriorityScore`) VALUES
-(11, '2025-04-05', 'Video', 1, NULL, 'ttt', 0),
-(12, '2025-04-05', 'Video', 1, 2, NULL, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -188,6 +180,20 @@ CREATE TABLE `postmedia` (
   `Type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `MediaURL` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `PostID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `postshare`
+--
+
+CREATE TABLE `postshare` (
+  `ShareID` int(11) NOT NULL,
+  `OriginalPostID` int(11) DEFAULT NULL,
+  `SharedByUserID` int(11) DEFAULT NULL,
+  `ShareDate` datetime DEFAULT NULL,
+  `Content` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -221,18 +227,6 @@ CREATE TABLE `users` (
   `SessionID` varchar(255) DEFAULT NULL,
   `Role` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `users`
---
-
-INSERT INTO `users` (`UserID`, `FullName`, `Username`, `Password`, `Email`, `AvatarURL`, `CoverPhotoUrl`, `SessionID`, `Role`) VALUES
-(1, 'Tống Thành Đạt', 'tongthanhdat009', 'dat12345', 'gamingthanhdat@gmail.com', NULL, NULL, NULL, 'Admin'),
-(2, 'Tống Thành Đạt', 'tongthanhdat009', 'dat12345', 'gamingthanhdat@gmail.com', NULL, NULL, NULL, 'Admin');
-
---
--- Chỉ mục cho các bảng đã đổ
---
 
 --
 -- Chỉ mục cho bảng `chatbox`
@@ -325,6 +319,14 @@ ALTER TABLE `postmedia`
   ADD KEY `FK_PostMedia_Post` (`PostID`);
 
 --
+-- Chỉ mục cho bảng `postshare`
+--
+ALTER TABLE `postshare`
+  ADD PRIMARY KEY (`ShareID`),
+  ADD KEY `OriginalPostID` (`OriginalPostID`),
+  ADD KEY `SharedByUserID` (`SharedByUserID`);
+
+--
 -- Chỉ mục cho bảng `sessions`
 --
 ALTER TABLE `sessions`
@@ -406,6 +408,12 @@ ALTER TABLE `post`
 --
 ALTER TABLE `postmedia`
   MODIFY `PostMediaID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `postshare`
+--
+ALTER TABLE `postshare`
+  MODIFY `ShareID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
@@ -490,6 +498,13 @@ ALTER TABLE `post`
 --
 ALTER TABLE `postmedia`
   ADD CONSTRAINT `FK_PostMedia_Post` FOREIGN KEY (`PostID`) REFERENCES `post` (`PostID`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `postshare`
+--
+ALTER TABLE `postshare`
+  ADD CONSTRAINT `postshare_ibfk_1` FOREIGN KEY (`OriginalPostID`) REFERENCES `post` (`PostID`),
+  ADD CONSTRAINT `postshare_ibfk_2` FOREIGN KEY (`SharedByUserID`) REFERENCES `users` (`UserID`);
 
 --
 -- Các ràng buộc cho bảng `sessions`
