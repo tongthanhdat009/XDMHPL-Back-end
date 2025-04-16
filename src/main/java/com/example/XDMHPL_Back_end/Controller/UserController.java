@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.Controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,13 @@ public class UserController {
 			@RequestParam String password,
 			@RequestParam String email,
 			@RequestParam String avatar,
+			@RequestParam String phoneNumber,
+			@RequestParam Date dateOfBirth,
+			@RequestParam String gender,
 			@RequestParam String coverPhotoURL,
 			@RequestParam String sessionID,
 			@RequestParam String role) {
-		return usersService.createUser(fullName, userName, password, email, avatar, coverPhotoURL, sessionID ,role);
+		return usersService.createUser(fullName, userName, password, email, avatar,phoneNumber, dateOfBirth, gender, coverPhotoURL, sessionID, role);
 	}
 	
 	@GetMapping("/{id}")

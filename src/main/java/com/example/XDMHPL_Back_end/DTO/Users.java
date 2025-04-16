@@ -1,5 +1,7 @@
 package com.example.XDMHPL_Back_end.DTO;
 
+import java.sql.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +26,15 @@ public class Users {
 	@Column(name = "AvatarURL", nullable = false)
 	private String avatar;
 	
+	@Column(name = "PhoneNumber", nullable = false)
+	private String phoneNumber;
+	
+	@Column(name = "DateOfBirth", nullable = false)
+	private Date dateOfBirth;
+	
+	@Column(name = "Gender", nullable = false)
+	private String gender;
+	
 	@Column(name = "CoverPhotoURL", nullable = false)
 	private String coverPhotoURL;
 	
@@ -36,7 +47,8 @@ public class Users {
 	public Users() {}
 
 	// Constructor đầy đủ
-	public Users(String fullName, String userName, String password, String email, String avatar, String coverPhotoURL, String sessionID, String role) {
+	public Users(String fullName, String userName, String password, String email, String avatar, String phoneNumber, Date dateOfBirth, String gender
+			, String coverPhotoURL, String sessionID, String role) {
 		this.fullName = fullName;
 		this.email = email;
 		this.userName = userName;
@@ -45,12 +57,24 @@ public class Users {
 		this.sessionID = sessionID;
 		this.coverPhotoURL = coverPhotoURL;
 		this.role = role;
+		this.phoneNumber = phoneNumber;
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
 	}
 
 	// Getter và Setter đúng
 	public int getUserID() { return userID; }
 	public void setUserID(int id) { this.userID = id; }
-
+	
+	public String getPhoneNumber() {return phoneNumber;}
+	public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+	
+	public Date getDateOfBirth() {return dateOfBirth;}
+	public void setDateOfBirth(Date dateOfBirth) {this.dateOfBirth = dateOfBirth;}
+	
+	public String getGender() {return gender;}
+	public void setGender(String gender) {this.gender = gender;}
+	
 	public String getFullName() { return fullName; }
 	public void setFullName(String name) { this.fullName = name; }
 

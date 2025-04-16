@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.Services;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,9 @@ public class UserService {
         return usersRepository.findAll();
     }
 
-    public Users createUser(String fullName, String userName, String password, String email, String avatar, String coverPhotoURL, String sessionID, String role) {
-    	Users user = new Users(fullName, userName, password, email, avatar, coverPhotoURL, sessionID, role);
+    public Users createUser(String fullName, String userName, String password, String email, String avatar, String phoneNumber, Date dateOfBirth, String gender
+			, String coverPhotoURL, String sessionID, String role) {
+    	Users user = new Users(fullName, userName, password, email, avatar,phoneNumber, dateOfBirth, gender, coverPhotoURL, sessionID, role);
         return usersRepository.save(user);
     }
     
