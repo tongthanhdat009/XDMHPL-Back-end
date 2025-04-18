@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 16, 2025 lúc 04:07 AM
+-- Thời gian đã tạo: Th4 18, 2025 lúc 06:41 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -11,7 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
+DROP DATABASE IF EXISTS facebook_clone;
+CREATE DATABASE facebook_clone;
+USE `facebook_clone`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -20,9 +22,7 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `facebook_clone`
 --
-DROP DATABASE IF EXISTS facebook_clone;
-CREATE DATABASE facebook_clone;
-USE `facebook_clone`;
+
 -- --------------------------------------------------------
 
 --
@@ -174,7 +174,8 @@ CREATE TABLE `post` (
 
 INSERT INTO `post` (`PostID`, `CreationDate`, `Type`, `UserID`, `Content`, `PriorityScore`) VALUES
 (1, '2025-04-16', 'image', 1, 'dìa dia', 0),
-(2, '2025-04-16', 'video', 1, 'hehe', 0);
+(2, '2025-04-16', 'video', 1, 'hehe', 0),
+(3, '2025-04-16', 'video', 1, 'hehe', 0);
 
 -- --------------------------------------------------------
 
@@ -195,7 +196,8 @@ CREATE TABLE `postmedia` (
 
 INSERT INTO `postmedia` (`PostMediaID`, `Type`, `MediaURL`, `PostID`) VALUES
 (1, 'image', NULL, 1),
-(2, 'Video', NULL, 2);
+(2, 'Video', NULL, 2),
+(3, 'Video', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -216,7 +218,8 @@ CREATE TABLE `postshare` (
 --
 
 INSERT INTO `postshare` (`ShareID`, `OriginalPostID`, `SharedByUserID`, `ShareDate`, `Content`) VALUES
-(1, 1, 1, '2025-04-16', 'aaaa');
+(1, 1, 1, '2025-04-16', 'aaaa'),
+(2, 1, 1, '2025-04-16', 'aaaa');
 
 -- --------------------------------------------------------
 
@@ -240,14 +243,14 @@ CREATE TABLE `sessions` (
 
 CREATE TABLE `users` (
   `UserID` int(11) NOT NULL,
-  `FullName` varchar(50) DEFAULT NULL,
+  `FullName` mediumtext DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
-  `Password` varchar(50) DEFAULT NULL,
+  `Password` varchar(255) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `AvatarURL` varchar(200) DEFAULT NULL,
-  `PhoneNumber` varchar(10) NOT NULL,
-  `DateOfBirth` date NOT NULL,
-  `Gender` varchar(10) NOT NULL,
+  `PhoneNumber` varchar(10) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL,
+  `Gender` varchar(10) DEFAULT NULL,
   `CoverPhotoUrl` varchar(200) DEFAULT NULL,
   `SessionID` varchar(255) DEFAULT NULL,
   `Role` varchar(20) DEFAULT NULL
@@ -258,8 +261,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`UserID`, `FullName`, `Username`, `Password`, `Email`, `AvatarURL`, `PhoneNumber`, `DateOfBirth`, `Gender`, `CoverPhotoUrl`, `SessionID`, `Role`) VALUES
-(1, 'Tống Thành Đạt', 'tongthanhdat009', 'matkhau123', 'a@gmail.com', NULL, '0395632027', '1990-01-01', 'Nam', NULL, 'null', 'user'),
-(2, 'Tống Thành Đạt', 'tongthanhdat009', 'matkhau123', 'b@gmail.com', NULL, '0395632027', '1990-01-01', 'Nam', NULL, 'admin', 'user');
+(1, 'Tống Thành Đạt', 'tongthanhdat001', 'matkhau123', 'a@gmail.com', NULL, '0395632026', '1990-01-01', 'Nam', NULL, 'NULL', 'user'),
+(42, 'TốngThành Đạt', 'tongthanhdat009', '$2a$10$0cZlYxjf4/fS1VczEYHyTOHLQ0RdWZFkrWxxKyOEixIYd3fMBqACq', 'gamingthanhdat@gmail.com', NULL, '0395632027', '2000-04-17', 'Nam', NULL, NULL, 'user');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -437,25 +440,25 @@ ALTER TABLE `notification`
 -- AUTO_INCREMENT cho bảng `post`
 --
 ALTER TABLE `post`
-  MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `postmedia`
 --
 ALTER TABLE `postmedia`
-  MODIFY `PostMediaID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PostMediaID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `postshare`
 --
 ALTER TABLE `postshare`
-  MODIFY `ShareID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ShareID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
