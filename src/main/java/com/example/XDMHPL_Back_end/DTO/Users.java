@@ -1,6 +1,7 @@
 package com.example.XDMHPL_Back_end.DTO;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
@@ -11,43 +12,44 @@ public class Users {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userID;
 
-	@Column(name = "`FullName`", nullable = false, unique = false)
+	@Column(name = "`FullName`", nullable = true, unique = false)
 	private String fullName;
 
-	@Column(name = "UserName", nullable = false, unique = true)
+	@Column(name = "UserName", nullable = true, unique = true)
 	private String userName;
 
-	@Column(name = "Email", nullable = false, unique = true)
+	@Column(name = "Email", nullable = true, unique = true)
 	private String email;
 
-	@Column(name = "Password", nullable = false)
+	@Column(name = "Password", nullable = true)
 	private String password;
 
-	@Column(name = "AvatarURL", nullable = false)
+	@Column(name = "AvatarURL", nullable = true)
 	private String avatar;
 	
-	@Column(name = "PhoneNumber", nullable = false)
+	@Column(name = "PhoneNumber", nullable = true)
 	private String phoneNumber;
 	
-	@Column(name = "DateOfBirth", nullable = false)
-	private Date dateOfBirth;
+	@Column(name = "DateOfBirth", nullable = true)
+	private LocalDate dateOfBirth;
 	
-	@Column(name = "Gender", nullable = false)
+	@Column(name = "Gender", nullable = true)
 	private String gender;
 	
-	@Column(name = "CoverPhotoURL", nullable = false)
+	@Column(name = "CoverPhotoURL", nullable = true)
 	private String coverPhotoURL;
 	
-	@Column(name = "SessionID", nullable = false)
+	@Column(name = "SessionID", nullable = true)
 	private String sessionID;
 	
-	@Column(name = "Role", nullable = false)
+	@Column(name = "Role", nullable = true)
 	private String role;
+	
 	// Constructor rỗng bắt buộc cho JPA
 	public Users() {}
 
 	// Constructor đầy đủ
-	public Users(String fullName, String userName, String password, String email, String avatar, String phoneNumber, Date dateOfBirth, String gender
+	public Users(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
 			, String coverPhotoURL, String sessionID, String role) {
 		this.fullName = fullName;
 		this.email = email;
@@ -69,8 +71,8 @@ public class Users {
 	public String getPhoneNumber() {return phoneNumber;}
 	public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 	
-	public Date getDateOfBirth() {return dateOfBirth;}
-	public void setDateOfBirth(Date dateOfBirth) {this.dateOfBirth = dateOfBirth;}
+	public LocalDate  getDateOfBirth() {return dateOfBirth;}
+	public void setDateOfBirth(LocalDate dateOfBirth) {this.dateOfBirth = dateOfBirth;}
 	
 	public String getGender() {return gender;}
 	public void setGender(String gender) {this.gender = gender;}
