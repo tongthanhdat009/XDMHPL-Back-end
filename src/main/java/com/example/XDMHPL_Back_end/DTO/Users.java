@@ -41,6 +41,9 @@ public class Users {
 	
 	@Column(name = "SessionID", nullable = true)
 	private String sessionID;
+
+	@Column(name ="Bio", nullable = true)
+	private String Bio;
 	
 	@Column(name = "Role", nullable = true)
 	private String role;
@@ -50,11 +53,12 @@ public class Users {
 
 	// Constructor đầy đủ
 	public Users(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
-			, String coverPhotoURL, String sessionID, String role) {
+			, String coverPhotoURL, String sessionID,String Bio, String role) {
 		this.fullName = fullName;
 		this.email = email;
 		this.userName = userName;
 		this.password = password;
+		this.Bio = Bio;
 		this.avatar = avatar;
 		this.sessionID = sessionID;
 		this.coverPhotoURL = coverPhotoURL;
@@ -65,6 +69,9 @@ public class Users {
 	}
 
 	// Getter và Setter đúng
+	public String getBio() { return Bio; }
+	public void setBio(String bio) { this.Bio = bio; }
+
 	public int getUserID() { return userID; }
 	public void setUserID(int id) { this.userID = id; }
 	
